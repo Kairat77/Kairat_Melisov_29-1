@@ -1,30 +1,73 @@
-"""
-URL configuration for blog project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+
+
 from django.contrib import admin
 from django.urls import path
-from posts.views import hello_views
-from posts.views import redirect_to_youtube_views
-from posts.views import now_date_views, goodby_views
+from django.conf.urls.static import static
+from blog import settings
+# from posts.views import (main_page_view, 
+#                          posts_view, 
+#                          hashtags_view, 
+#                          post_detail_view, 
+#                          post_create_view)
+from django.urls import include
+from posts.views import HashtagViewSet, PostViewSet
+from rest_framework import routers
+from rest_framework.schemas import get_schema_view
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
+
+
+
+router = routers.DefaultRouter()
+router.register(r'hashtags', HashtagViewSet)
+router.register(r'posts', PostViewSet)
+
+
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Ваше API",
+        default_version='v1',
+        description="Документация API",
+        terms_of_service="https://www.example.com/terms/",
+        contact=openapi.Contact(email="contact@example.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("hello/", hello_views),
-    path("youtube/", redirect_to_youtube_views),
-    path("now_date/", now_date_views),
-    path("goodby/", goodby_views),
+    path('admin/', admin.site.urls),
+    path('api/', include('posts.urls')),
+
+    # URL-адреса для Swagger
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),
+    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='swagger-json'),
+
+    # URL-адреса для ReDoc
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='redoc-ui'),
 ]
+
+
+
+
+
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('', main_page_view),
+#     path('posts/',posts_view),
+#     path('hashtag/',hashtags_view),
+#     path('posts/<int:pk>/', post_detail_view),
+#     path('posts/create/',post_create_view)
+# ]
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+
+

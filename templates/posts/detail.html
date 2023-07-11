@@ -1,0 +1,25 @@
+{% extends 'layouts/index.html' %}
+
+{% block content %}
+<style>
+  .post_block{
+    width:80%;
+    margin-left:10%;
+    padding: 20px;
+  }
+</style>
+  <div class="post_block">
+    <div class="image">
+      <img src="{{post.image.url}}" alt="">
+    </div>
+    <div>
+      <h1>{{post.title}}</h1>
+      <p>{{post.description}}</p>
+
+    </div>
+    <div>
+      <h6>{{post.created_at}}</h6>
+      <h6>{{post.modified_at}}</h6>
+    </div>
+  </div>
+{% endblock  %}

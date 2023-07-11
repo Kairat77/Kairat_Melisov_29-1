@@ -1,0 +1,26 @@
+{% extends 'layouts/index.html' %} 
+{% load static %} 
+
+{% block head %}
+<link rel="stylesheet" href="{%static 'posts.css'%}" />
+{% endblock %} 
+
+{% block content %}
+
+<div class="posts" >
+  <div class="card" style="width: 18rem">
+    {% for post in posts %}
+      <img src="{{post.image.url}}"  class="card-img-top" alt="anticor" />
+    <div class="card-body">
+      <h5 class="card-title">{{post.title}}</h5>
+      <h6 class="card-title">{{post.rate}}</h6>
+      {% for hashtag in post.hashtags_list %}
+      <p class="card-text">{{hashtag.title}}</p>
+      {% endfor %}
+      <p>{{post.description }}</p>
+      <a href="/posts/{{post.id}}/" class="btn btn-primary">Go somewhere</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
